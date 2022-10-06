@@ -7,13 +7,16 @@ import Footer from "../components/Footer.js"
 
 export default function SessionPage() {
     const [movie, setMovie] = useState([])
+    const [days, setDays] = useState([])
     const {idFilme} = useParams()
 
     useEffect(() => {
         const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/movies/${idFilme}/showtimes`)
 
         promise.then((res) => {
-            setMovie(res.data.days)
+            setMovie(res.data)
+            setDays(res.data.days)
+            console.log(res.data)
             console.log(res.data.days)
         })
 
@@ -26,12 +29,17 @@ export default function SessionPage() {
         <>
             <Sessions>
                 <p> Selecione o horário </p>
+                
                 <Info>
-                {movie.map((d) =>
-                    <Day><span>{d.weekday} - {d.date}</span></Day>)}
+               
+                {days.map((d) => <><Day><span>{d.weekday} - {d.date}</span></Day>
+                                    <Time> {d.showtimes.map((t) => <Link to={`/assentos/${t.id}`}> <div className="box">{t.name}</div> </Link>)} </Time>
+                                    </>)}
                 </Info>
+
             </Sessions>
-            <Footer></Footer>
+            
+            <Footer movie={movie}/>
         </>
     )
 }
@@ -53,7 +61,7 @@ const Sessions = styled.div`
 const Info = styled.div`
     display: flex;
     flex-direction: column;
-    padding-bottom: 25px;
+    padding-bottom: 117px;
 
     img {
         width: 100px;

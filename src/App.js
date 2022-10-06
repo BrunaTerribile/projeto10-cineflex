@@ -3,7 +3,6 @@ import HomePage from "./pages/HomePage"
 import SessionPage from "./pages/SessionPage"
 import SeatsPage from "./pages/SeatsPage"
 import ConfirmPage from "./pages/ConfirmPage"
-import Footer from "./components/Footer"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 function App() {
@@ -19,7 +18,6 @@ function App() {
         <Route path="/sucesso" element={<ConfirmPage/>}/>
       </Routes>
 
-      <Footer></Footer>
     </BrowserRouter>
   );
 }
