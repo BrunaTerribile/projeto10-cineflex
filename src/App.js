@@ -3,12 +3,13 @@ import HomePage from "./pages/HomePage"
 import SessionPage from "./pages/SessionPage"
 import SeatsPage from "./pages/SeatsPage"
 import ConfirmPage from "./pages/ConfirmPage"
+import GlobalStyle from './styles/globalStyles'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 function App() {
   return (
     <BrowserRouter>
-      
+      <GlobalStyle />
       <Header></Header>
       
       <Routes>

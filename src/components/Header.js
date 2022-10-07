@@ -16,7 +16,6 @@ const Head = styled.div`
     left: 0;
 
     p {
-        font-family: Roboto, sans-serif;
         font-size: 34px;
         color: #E8833A;
         margin: auto;
