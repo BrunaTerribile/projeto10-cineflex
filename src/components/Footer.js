@@ -1,14 +1,16 @@
 import styled from "styled-components"
 
 export default function Footer(props) {
-    const {movie} = props;
-    
+
     return (
         <Ticket>
             <Poster>
-                <img src={movie.posterURL} alt="poster do filme"/>
+                <img src={props.posterURL} alt="poster do filme"/>
             </Poster>
-            <Title> {movie.title}</Title>
+            <Title> 
+                <div>{props.title}</div>
+                <div>{props.weekday} - {props.time}</div>
+            </Title>
         </Ticket>
     )
 }
@@ -44,4 +46,7 @@ const Poster = styled.div`
 const Title = styled.div`
     font-size: 24px;
     margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    color: #293845;
 `;

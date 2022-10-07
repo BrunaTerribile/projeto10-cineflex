@@ -2,15 +2,16 @@ import axios from 'axios'
 import styled from "styled-components"
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import Footer from '../components/Footer'
 
 export default function SeatsPage() {
+    const [movie, setMovie] = useState([])
     const [seats, setSeats] = useState([]) //armazena o mapa de assentos vindo da api
-    const {idSession} = useParams()
+    const { idSession } = useParams()
 
     const [name, setName] = useState("") //armazena o nome, cpf e assentos reservados para emitir o ingresso 
     const [cpf, setCpf] = useState("")
     const [ticket, setTicket] = useState([])
-    console.log("fora da func", ticket)
 
     const navigate = useNavigate()
 
@@ -20,9 +21,9 @@ export default function SeatsPage() {
         const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/51/seats`)
 
         promise.then((res) => {
+            setMovie(res.data)
+            console.log("seats page 2", res.data)
             setSeats(res.data.seats)
-            console.log("sessão escolhida:")
-            console.log(res.data.seats)
         })
 
         promise.catch((erro) => {
@@ -31,30 +32,46 @@ export default function SeatsPage() {
     }, [])
 
     function selectSeat(props) {
-        //event.preventDefault();
 
         let id = props.id
         let ready = props.isAvailable
-        
-        switch(ready){
+
+        switch (ready) {
             case false: //assento indisponivel
                 alert("Esse assento não está disponível")
             case true:
-                if (!ticket.includes(id)){ //assento disponível vira selecionado
+                if (!ticket.includes(id)) { //assento disponível vira selecionado
                     const newTicket = id
                     setTicket([...ticket, newTicket])
-                    console.log(ticket)
-                } else if (ticket.includes(id)){ //assento selecionado vira disponivel
+                } else if (ticket.includes(id)) { //assento selecionado vira disponivel
                     const removeTicket = ticket.filter((t) => t !== id)
                     setTicket(removeTicket)
-                    console.log(ticket)
                 }
         }
     }
 
-    function bookSeat(){
-    
-        //navigate("/sucesso")
+    function bookSeat(event) {
+        event.preventDefault();
+
+        const URL = 'https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many'
+
+        const body = {
+            ids: { ticket },
+            name: { name },
+            cpf: { cpf }
+        }
+
+        const promise = axios.post(URL, body)
+
+        promise.then((res) => {
+            console.log(res.data)
+            alert("Ingresso reservado")
+            navigate("/sucesso") //redireciona para a página de confirmação
+        })
+
+        promise.catch((erro) => {
+            console.log(erro.message)
+        })
     }
 
     return (
@@ -63,14 +80,14 @@ export default function SeatsPage() {
                 <p> Selecione o(s) assento(s) </p>
 
                 <SeatMap>
-                    {seats.map((s) => s.isAvailable ? <div key={s.id} className={ticket.includes(s.id) ? 'selected' : 'available'} onClick={() => selectSeat(s)} >{s.name}</div> 
-                                                    : <div key={s.id} className='unavailable' onClick={() => selectSeat(s)}>{s.name}</div>)}
+                    {seats.map((s) => s.isAvailable ? <div key={s.id} className={ticket.includes(s.id) ? 'selected' : 'available'} onClick={() => selectSeat(s)} >{s.name}</div>
+                        : <div key={s.id} className='unavailable' onClick={() => selectSeat(s)}>{s.name}</div>)}
 
                 </SeatMap>
 
                 <Label>
-                    <div className='selected'></div> 
-                    <div className='available'></div> 
+                    <div className='selected'></div>
+                    <div className='available'></div>
                     <div className='unavailable'></div>
                 </Label>
 
@@ -81,32 +98,38 @@ export default function SeatsPage() {
                 </Details>
 
                 <form onSubmit={bookSeat}>
-                    <label for="name"> Nome do comprador: </label>
-                    <Input
+                    <label htmlFor='name'> Nome do comprador: </label>
+                    <input
                         name="name"
                         value={name}
                         id="name"
                         type="text"
-                        required 
+                        required
                         onChange={e => setName(e.target.value)}
-                        ></Input>
-                    <label for="cpf"> CPF do comprador: </label>
-                    <Input
+                        placeholder="Digite seu nome..."
+                    />
+                    <label htmlFor='cpf'> CPF do comprador: </label>
+                    <input
                         name="cpf"
                         value={cpf}
                         id="cpf"
                         type="number"
-                        required 
+                        required
                         onChange={e => setCpf(e.target.value)}
-                        ></Input>
+                        placeholder="Digite seu CPF..."
+                    />
 
                     <Button type="submit">Reservar assento(s)</Button>
                 </form>
             </Seats>
 
+            <Footer posterURL={movie.posterURL} title={movie.title} weekday="" time="" />
         </>
     )
 }
+
+// posterURL={movie.posterURL} title={movie.title} weekday="" time=""
+// posterURL={movie.movie.posterURL} title={movie.movie.title} weekday={movie.day.weekday} time={movie.name} 
 
 const Seats = styled.div`
     width: 100%;
@@ -117,10 +140,37 @@ const Seats = styled.div`
     margin-top: 67px;
 
     p {
-        margin: 40px auto;
+        margin: 40px auto 20px auto;
         font-size: 24px;
     }
+
+    form {
+        margin-left: 24px;
+        margin-top: 30px;
+        font-family: Roboto, sans-serif;
+        
+        label {
+            font-size: 18px;
+        }
+
+        input {
+            width: 327px;
+            height: 41px;
+            border: 1px solid #D4D4D4;
+            border-radius: 5px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 18px;
+
+            ::placeholder{
+                color: #AFAFAF;
+                font-style: italic;
+                font-size: 18px;
+            }
+        }
+    }
 `;
+
 const SeatMap = styled.div`
     width: 100%;
     display: flex;
@@ -137,7 +187,7 @@ const SeatMap = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 9px 4px;
+        margin: 0 4px 18px 4px;
         font-size: 11px;
     }
 
@@ -174,11 +224,6 @@ const Details = styled(SeatMap)`
     }
 `;
 
-const Input = styled.div`
-    width: 327px;
-    height: 51px;
-`;
-
 const Button = styled.button`
     width: 225px;
     height: 42px;
@@ -188,4 +233,5 @@ const Button = styled.button`
     text-decoration: none;
     font-size: 18px;
     color: white;
+    margin: 30px 0 0 60px;
 `;
