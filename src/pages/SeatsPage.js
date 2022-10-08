@@ -1,20 +1,19 @@
 import axios from 'axios'
 import styled from "styled-components"
 import { useState, useEffect } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, useRouteLoaderData } from "react-router-dom"
 import Footer from '../components/Footer'
 
-export default function SeatsPage() {
+export default function SeatsPage({setUserData}) {
     const [movie, setMovie] = useState([])
     const [seats, setSeats] = useState([]) //armazena o mapa de assentos vindo da api
-    const { idSession } = useParams()
+    const [name, setName] = useState("")       //armazena o nome,
+    const [cpf, setCpf] = useState("")        //cpf e  
+    const [ticket, setTicket] = useState([]) //assentos reservados para emitir o ingresso 
 
-    const [name, setName] = useState("") //armazena o nome, cpf e assentos reservados para emitir o ingresso 
-    const [cpf, setCpf] = useState("")
-    const [ticket, setTicket] = useState([])
+    const {idSession} = useParams()
 
     const navigate = useNavigate()
-
     //console.log(idSession)
 
     useEffect(() => {
@@ -60,13 +59,15 @@ export default function SeatsPage() {
             name: { name },
             cpf: { cpf }
         }
+        console.log("meu ingresso:", body)
 
         const promise = axios.post(URL, body)
 
         promise.then((res) => {
             console.log(res.data)
+            setUserData({movie, body})
             alert("Ingresso reservado")
-            navigate("/sucesso") //redireciona para a página de confirmação
+            navigate("/sucesso")
         })
 
         promise.catch((erro) => {

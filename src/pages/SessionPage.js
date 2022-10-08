@@ -1,6 +1,6 @@
 import axios from 'axios'
 import styled from "styled-components"
-import { useState, useEffect} from "react"
+import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer.js"
@@ -16,7 +16,7 @@ export default function SessionPage() {
         promise.then((res) => {
             setMovie(res.data)
             setDays(res.data.days)
-            console.log(res.data)
+            console.log("session page 1", res.data)
             console.log(res.data.days)
         })
 
@@ -25,6 +25,8 @@ export default function SessionPage() {
         })
     }, [])
 
+    console.log(days)
+
     return (
         <>
             <Sessions>
@@ -32,14 +34,14 @@ export default function SessionPage() {
                 
                 <Info>
                
-                {days.map((d) => <><Day><span>{d.weekday} - {d.date}</span></Day>
-                                    <Time> {d.showtimes.map((t) => <Link to={`/assentos/${t.id}`}> <div className="box">{t.name}</div> </Link>)} </Time>
+                {days.map((d) => <> <Day><span>{d.weekday} - {d.date}</span></Day>
+                                    <Time> {d.showtimes.map((t) => <Link to={`/assentos/${d.id}`}> <div className="box">{t.name}</div> </Link>)} </Time>
                                     </>)}
                 </Info>
 
             </Sessions>
             
-            <Footer movie={movie}/>
+            <Footer posterURL={movie.posterURL} title={movie.title} weekday="" time=""/>
         </>
     )
 }
@@ -53,7 +55,6 @@ const Sessions = styled.div`
 
     p {
         margin: 40px auto;
-        font-family: Roboto, sans-serif;
         font-size: 24px;
     }
 `;
@@ -76,7 +77,6 @@ const Day = styled.div`
 
     span {
         margin-left: 25px;
-        font-family: Roboto, sans-serif;
         font-size: 20px;
     }
 `;
@@ -96,7 +96,6 @@ const Time = styled.div`
         align-items: center;
         justify-content: center;
         margin-right: 10px;
-        font-family: Roboto, sans-serif;
         font-size: 18px;
         color: white;
     }
