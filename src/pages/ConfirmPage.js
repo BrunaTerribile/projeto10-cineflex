@@ -3,17 +3,21 @@ import { Link } from "react-router-dom";
 
 export default function ConfirmPage({userData}) {
     
-    console.log("recebi:", {userData})
-
     let user = userData.body
     let movieInfo = userData.movie
 
-    console.log(user)
-    console.log(movieInfo)
-
     function slice(t){
         let seat = (t % 100)
-        return <p>Assento {seat} </p>
+        return <p key={t.id} >Assento {seat} </p>
+    }
+
+
+    function formatCPF(cpf){
+        //retira os caracteres indesejados...
+        cpf = cpf.replace(/[^\d]/g, "");
+        
+        //realizar a formatação...
+        return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
     }
 
     return (
@@ -30,7 +34,7 @@ export default function ConfirmPage({userData}) {
 
                 <Title> Comprador </Title>
                 <p>Nome: {user.name.name}</p>
-                <p>CPF: {user.cpf.cpf}</p>
+                <p>CPF: {formatCPF(user.cpf.cpf)}</p>
             </MovieInfo>
 
             <Button><Link to={`/`}> Voltar pra Home</Link></Button>
