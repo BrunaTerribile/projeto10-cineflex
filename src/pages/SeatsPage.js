@@ -15,7 +15,6 @@ export default function SeatsPage({setUserData, movie, setMovie}) {
 
     useEffect(() => {
         const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSessao}/seats`)
-        console.log("dentro")
 
         promise.then((res) => {
             setSeats(res.data.seats)
@@ -61,7 +60,6 @@ export default function SeatsPage({setUserData, movie, setMovie}) {
 
         promise.then((res) => {
             setUserData({movie, body})
-            alert("Ingresso reservado")
             console.log(res.data)
             navigate("/sucesso")
         })
@@ -145,6 +143,7 @@ const Seats = styled.div`
         margin-left: 24px;
         margin-top: 30px;
         font-family: Roboto, sans-serif;
+        padding-bottom: 130px;
         
         label {
             font-size: 18px;
