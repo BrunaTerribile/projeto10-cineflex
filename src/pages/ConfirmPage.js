@@ -11,13 +11,9 @@ export default function ConfirmPage({userData}) {
         return <p key={t.id} >Assento {seat} </p>
     }
 
-
     function formatCPF(cpf){
-        //retira os caracteres indesejados...
-        cpf = cpf.replace(/[^\d]/g, "");
-        
-        //realizar a formatação...
-        return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+        cpf = cpf.replace(/[^\d]/g, "") //retira os caracteres indesejados
+        return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") //realizar a formatação
     }
 
     return (
@@ -25,19 +21,19 @@ export default function ConfirmPage({userData}) {
             <Sucess> <p>Pedido feito com sucesso! </p> </Sucess>
 
             <MovieInfo>
-                <Title> Filme e sessão </Title>
+                <Title data-identifier="movie-session-infos-reserve-finished"> Filme e sessão </Title>
                 <p>{movieInfo.movie.title}</p>
                 <p>{movieInfo.day.date}  {movieInfo.name}</p>
 
-                <Title> Ingressos </Title>
+                <Title data-identifier="seat-infos-reserve-finished"> Ingressos </Title>
                 {user.ids.ticket.map(slice)}
 
-                <Title> Comprador </Title>
+                <Title data-identifier="buyer-infos-reserve-finished"> Comprador </Title>
                 <p>Nome: {user.name.name}</p>
                 <p>CPF: {formatCPF(user.cpf.cpf)}</p>
             </MovieInfo>
 
-            <Button><Link to={`/`}> Voltar pra Home</Link></Button>
+            <Button><Link to={`/`} data-identifier="back-to-home-btn"> Voltar pra Home</Link></Button>
         </Confirm>
     )
 

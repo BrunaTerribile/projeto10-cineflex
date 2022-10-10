@@ -1,9 +1,8 @@
 import styled from "styled-components"
-import { useState, useEffect } from "react"
 import axios from 'axios'
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom";
 import loading from "../gif-loading.gif"
-
 
 export default function HomePage() {
     const [poster, setPoster] = useState([]);
@@ -26,12 +25,11 @@ export default function HomePage() {
         return <img src={loading} alt="carregando"/>
     }
 
-
     return (
         <Home>
             <p> Selecione o filme </p>
             <Movies>
-                {poster.map((m) => <Poster> <Link to={`/sessoes/${m.id}`}> <img src={m.posterURL} alt="poster de filme"/> </Link> </Poster>)}
+                {poster.map((m) => <Poster key={m.id} data-identifier="movie-outdoor"> <Link to={`/sessoes/${m.id}`}> <img src={m.posterURL} alt="poster de filme"/> </Link> </Poster>)}
             </Movies>
         </Home>
     )
@@ -47,7 +45,6 @@ const Home = styled.div`
 
     p {
         margin: 40px auto;
-        font-family: Roboto, sans-serif;
         font-size: 24px;
     }
 `;

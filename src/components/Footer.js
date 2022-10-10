@@ -1,18 +1,18 @@
 import styled from "styled-components"
 
-export default function Footer(props) {
+export default function Footer({posterURL, title, weekday, time}) {
 
     return (
         <Ticket>
-            <Poster>
-                <img src={props.posterURL} alt="poster do filme"/>
+            <Poster data-identifier="movie-img-preview">
+                <img src={posterURL} alt="poster do filme"/>
             </Poster>
-            <Title> 
-                <div>{props.title}</div>
-                <div>{props.weekday} - {props.time}</div>
+            <Title data-identifier="movie-and-session-infos-preview"> 
+                <div>{title}</div>
+                <div>{weekday} - {time}</div>
             </Title>
         </Ticket>
-    )
+    )  
 }
 
 const Ticket = styled.div`

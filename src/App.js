@@ -9,6 +9,7 @@ import { useState } from "react"
 
 function App() {
   const [userData, setUserData] = useState([])
+  const [movie, setMovie] = useState([])
 
   return (
     <BrowserRouter>
@@ -18,11 +19,10 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/sessoes/:idFilme" element={<SessionPage />} />
-        <Route path="/assentos/:idSessao" element={<SeatsPage setUserData={setUserData} userData={userData}/>} />
+        <Route path="/sessoes/:idFilme" element={<SessionPage movie={movie} setMovie={setMovie}/>} />
+        <Route path="/assentos/:idSessao" element={<SeatsPage setUserData={setUserData} userData={userData} movie={movie} setMovie={setMovie}/>} />
         <Route path="/sucesso" element={<ConfirmPage userData={userData}/>} />
       </Routes>
-
 
     </BrowserRouter>
   );

@@ -1,27 +1,23 @@
 import axios from 'axios'
 import styled from "styled-components"
 import { useState, useEffect } from "react"
-import { useNavigate, useParams, useRouteLoaderData } from "react-router-dom"
-import Footer from '../components/Footer'
+import { useNavigate } from "react-router-dom"
+import { useParams } from "react-router-dom"
+import Footer from "../components/Footer.js"
 
-export default function SeatsPage({setUserData}) {
-    const [movie, setMovie] = useState([])
+export default function SeatsPage({setUserData, movie, setMovie}) {
     const [seats, setSeats] = useState([]) //armazena o mapa de assentos vindo da api
     const [name, setName] = useState("")       //armazena o nome,
     const [cpf, setCpf] = useState("")        //cpf e  
     const [ticket, setTicket] = useState([]) //assentos reservados para emitir o ingresso 
-
-    const {idSession} = useParams()
-
+    const {idSessao} = useParams()
     const navigate = useNavigate()
-    //console.log(idSession)
 
     useEffect(() => {
-        const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/51/seats`)
+        const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSessao}/seats`)
 
         promise.then((res) => {
             setMovie(res.data)
-            console.log("seats page 2", res.data)
             setSeats(res.data.seats)
         })
 
@@ -59,14 +55,13 @@ export default function SeatsPage({setUserData}) {
             name: { name },
             cpf: { cpf }
         }
-        console.log("meu ingresso:", body)
 
         const promise = axios.post(URL, body)
 
         promise.then((res) => {
-            console.log(res.data)
             setUserData({movie, body})
             alert("Ingresso reservado")
+            console.log(res.data)
             navigate("/sucesso")
         })
 
@@ -75,21 +70,23 @@ export default function SeatsPage({setUserData}) {
         })
     }
 
+    console.log("array do filme:", movie)
+
     return (
         <>
             <Seats>
                 <p> Selecione o(s) assento(s) </p>
 
                 <SeatMap>
-                    {seats.map((s) => s.isAvailable ? <div key={s.id} className={ticket.includes(s.id) ? 'selected' : 'available'} onClick={() => selectSeat(s)} >{s.name}</div>
-                        : <div key={s.id} className='unavailable' onClick={() => selectSeat(s)}>{s.name}</div>)}
+                    {seats.map((s) => s.isAvailable ? <div key={s.id} data-identifier="seat" className={ticket.includes(s.id) ? 'selected' : 'available'} onClick={() => selectSeat(s)} >{s.name}</div>
+                        : <div key={s.id} data-identifier="seat" className='unavailable' onClick={() => selectSeat(s)}>{s.name}</div>)}
 
                 </SeatMap>
 
                 <Label>
-                    <div className='selected'></div>
-                    <div className='available'></div>
-                    <div className='unavailable'></div>
+                    <div className='selected' data-identifier="seat-selected-subtitle"></div>
+                    <div className='available' data-identifier="seat-available-subtitle"></div>
+                    <div className='unavailable' data-identifier="seat-unavailable-subtitle"></div>
                 </Label>
 
                 <Details>
@@ -108,6 +105,7 @@ export default function SeatsPage({setUserData}) {
                         required
                         onChange={e => setName(e.target.value)}
                         placeholder="Digite seu nome..."
+                        data-identifier="buyer-name-input"
                     />
                     <label htmlFor='cpf'> CPF do comprador: </label>
                     <input
@@ -118,13 +116,14 @@ export default function SeatsPage({setUserData}) {
                         required
                         onChange={e => setCpf(e.target.value)}
                         placeholder="Digite seu CPF..."
+                        data-identifier="buyer-cpf-input"
                     />
 
-                    <Button type="submit">Reservar assento(s)</Button>
+                    <Button type="submit" data-identifier="reservation-btn">Reservar assento(s)</Button>
                 </form>
             </Seats>
 
-            <Footer posterURL={movie.posterURL} title={movie.title} weekday="" time="" />
+            <Footer posterURL={movie.movie.posterURL} title={movie.movie.title} weekday={movie.day.weekday} time={movie.name} />
         </>
     )
 }

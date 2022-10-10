@@ -5,8 +5,7 @@ import { useParams } from "react-router-dom"
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer.js"
 
-export default function SessionPage() {
-    const [movie, setMovie] = useState([])
+export default function SessionPage({movie, setMovie}) {
     const [days, setDays] = useState([])
     const {idFilme} = useParams()
 
@@ -16,16 +15,12 @@ export default function SessionPage() {
         promise.then((res) => {
             setMovie(res.data)
             setDays(res.data.days)
-            console.log("session page 1", res.data)
-            console.log(res.data.days)
         })
 
         promise.catch((erro) => {
             console.log(erro.response.data)
         })
     }, [])
-
-    console.log(days)
 
     return (
         <>
@@ -34,8 +29,8 @@ export default function SessionPage() {
                 
                 <Info>
                
-                {days.map((d) => <> <Day><span>{d.weekday} - {d.date}</span></Day>
-                                    <Time> {d.showtimes.map((t) => <Link to={`/assentos/${d.id}`}> <div className="box">{t.name}</div> </Link>)} </Time>
+                {days.map((d) => <> <Day key={d.id} data-identifier="session-date" ><span>{d.weekday} - {d.date}</span></Day>
+                                    <Time > {d.showtimes.map((t) => <Link to={`/assentos/${t.id}`} key={t.id} data-identifier="hour-minute-btn"> <div className="box">{t.name}</div> </Link>)} </Time>
                                     </>)}
                 </Info>
 
