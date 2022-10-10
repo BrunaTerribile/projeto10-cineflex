@@ -1,15 +1,19 @@
 import styled from "styled-components"
 
-export default function Footer({posterURL, title, weekday, time}) {
+export default function Footer({movie}) {
+
+    console.log("recebi", movie)
+    let selectedDay = movie.day
+    let selectedMovie = movie.movie
 
     return (
         <Ticket>
             <Poster data-identifier="movie-img-preview">
-                <img src={posterURL} alt="poster do filme"/>
+                {selectedMovie ? <img src={selectedMovie.posterURL} alt="poster do filme"/> : <img src={movie.posterURL} alt="poster do filme"/>}
             </Poster>
             <Title data-identifier="movie-and-session-infos-preview"> 
-                <div>{title}</div>
-                <div>{weekday} - {time}</div>
+                {selectedMovie ? <div>{selectedMovie.title}</div> : <div>{movie.title}</div>}
+                {selectedDay ? <div> {selectedDay.weekday} - {movie.name}</div> : ""}
             </Title>
         </Ticket>
     )  

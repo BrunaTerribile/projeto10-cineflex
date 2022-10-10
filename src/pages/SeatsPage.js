@@ -15,10 +15,11 @@ export default function SeatsPage({setUserData, movie, setMovie}) {
 
     useEffect(() => {
         const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSessao}/seats`)
+        console.log("dentro")
 
         promise.then((res) => {
-            setMovie(res.data)
             setSeats(res.data.seats)
+            setMovie(res.data)
         })
 
         promise.catch((erro) => {
@@ -69,8 +70,6 @@ export default function SeatsPage({setUserData, movie, setMovie}) {
             console.log(erro.message)
         })
     }
-
-    console.log("array do filme:", movie)
 
     return (
         <>
@@ -123,13 +122,11 @@ export default function SeatsPage({setUserData, movie, setMovie}) {
                 </form>
             </Seats>
 
-            <Footer posterURL={movie.movie.posterURL} title={movie.movie.title} weekday={movie.day.weekday} time={movie.name} />
+            <Footer movie={movie} />
+
         </>
     )
 }
-
-// posterURL={movie.posterURL} title={movie.title} weekday="" time=""
-// posterURL={movie.movie.posterURL} title={movie.movie.title} weekday={movie.day.weekday} time={movie.name} 
 
 const Seats = styled.div`
     width: 100%;

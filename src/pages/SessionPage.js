@@ -36,7 +36,7 @@ export default function SessionPage({movie, setMovie}) {
 
             </Sessions>
             
-            <Footer posterURL={movie.posterURL} title={movie.title} weekday="" time=""/>
+            <Footer movie={movie}/>
         </>
     )
 }
